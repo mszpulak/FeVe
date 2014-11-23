@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Hw</string>
+    <string name="app_name">FeVe YAUApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="editText1">Enter a message</string>
-    <string name="button_send">Send</string>
+    <string name="TextView1Hint">Enter a message</string>
+    <string name="button1_send">Open TestingSettings</string>
+    <string name="button2_send">Refresh below</string>
     <string name="title_activity_main">MainActivity</string>
     
 

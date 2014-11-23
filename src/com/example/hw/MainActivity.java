@@ -1,8 +1,13 @@
 package com.example.hw;
 
+import java.util.List;
+
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,19 +19,20 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
         setContentView(R.layout.activity_main);
         
         FillData();
+        startTestingActivity();
         
     }
 
     public void FillData() {
-    	TextView textView1 = (TextView) findViewById(R.id.editText1); 
+    	TextView textView1 = (TextView) findViewById(R.id.TextView1); 
         
         TelephonyManager  tm=(TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);  
         
-        String info="\nPhone Details:\n"; 
+        String info="\nPhone Details:"; 
         String IMEINumber=tm.getDeviceId();
         String DeviceSoftwareVersion=tm.getDeviceSoftwareVersion();
         String Line1Number=tm.getLine1Number();
@@ -40,19 +46,15 @@ public class MainActivity extends Activity {
         String  SimSerialNumber=tm.getSimSerialNumber();
         int  SimState=tm.getSimState();
         String  SubscriberId=tm.getSubscriberId();
+        List<CellInfo>  AllCellInfo= tm.getAllCellInfo();
         
-        String WholeText=info;
-        WholeText+="\nIMEINumber: "+IMEINumber;
-        WholeText+="\nDeviceSoftwareVersion: "+DeviceSoftwareVersion;
-        WholeText+="\nLine1Number: "+Line1Number;
-        WholeText+="\nNetworkCountryIso: "+NetworkCountryIso;
-        WholeText+="\nNetworkOperator: "+NetworkOperator;
-        WholeText+="\nNetworkOperatorName: "+NetworkOperatorName;
-        WholeText+="\nSimCountryIso: "+SimCountryIso;
-        WholeText+="\nSimOperator: "+SimOperator;
-        WholeText+="\nSimSerialNumber: "+SimSerialNumber;
-        WholeText+="\nSimState: "+SimState;
-        WholeText+="\nSubscriberId: "+SubscriberId;
+        String AllCellInfoString="";
+        for(int i = 0; i < AllCellInfo.size(); i++) {
+        	AllCellInfoString+="\n"+AllCellInfo.get(i).toString();
+        	AllCellInfoString+="\n===================";
+        }
+        
+        String  CellLocation=tm.getCellLocation().toString();
         
         String strPhoneType="";
         switch (PhoneType){  
@@ -66,8 +68,9 @@ public class MainActivity extends Activity {
                             strPhoneType="NONE";                
                                 break;  
         		}  
-        WholeText+="\nPhoneType: "+strPhoneType;
         
+        
+                
         String strNetworkType="";
         switch (NetworkType){
         	case (TelephonyManager.NETWORK_TYPE_EDGE):
@@ -88,12 +91,38 @@ public class MainActivity extends Activity {
         		strNetworkType="UNKNOWN";
 
         }
+        
+        String WholeText=info;
+        WholeText+="\nIMEINumber: "+IMEINumber;
+        //WholeText+="\nDeviceSoftwareVersion: "+DeviceSoftwareVersion;
+        WholeText+="\nPhoneNumber: "+Line1Number;
+        
+        WholeText+="\nPhoneType: "+strPhoneType;
         WholeText+="\nNetworkType: "+strNetworkType;
+        WholeText+="\nSubscriberId: "+SubscriberId;
+        WholeText+="\nNetworkCountryIso: "+NetworkCountryIso;    
+        WholeText+="\nNetworkOperator: "+NetworkOperator;
+        WholeText+="\nNetworkOperatorName: "+NetworkOperatorName;
+        WholeText+="\n===================";
+        //WholeText+="\nSimCountryIso: "+SimCountryIso;
+        //WholeText+="\nSimOperator: "+SimOperator;
+        //WholeText+="\nSimSerialNumber: "+SimSerialNumber;
+        //WholeText+="\nSimState: "+SimState;
+        
+        WholeText+="\nCellLocation: "+CellLocation;
+        WholeText+="\n===================";
+        WholeText+=AllCellInfoString;
         
         textView1.setText(WholeText);
     	
     }
     
+    public void startTestingActivity() {
+    	Intent i = new Intent();
+    	i.setComponent(new ComponentName("com.android.settings", "com.android.settings.RadioInfo"));
+    	i.setAction(Intent.ACTION_MAIN);
+    	startActivity(i); 
+    }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,5 +146,12 @@ public class MainActivity extends Activity {
     /** Called when the user clicks the Send button */
     public void sendMessage(View view) {
         // Do something in response to button
+    	startTestingActivity();
     }
+    /** Called when the user clicks the Send button */
+    public void refreshFillData(View view) {
+        // Do something in response to button
+    	FillData();
+    }
+    
 }
